@@ -59,6 +59,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -84,7 +85,6 @@ public class NewJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setText("http://qldt.ptit.edu.vn/");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -93,6 +93,9 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
             }
         });
 
@@ -143,14 +146,19 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Value");
 
+        jButton6.setText("Sửa");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -161,9 +169,10 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1))
-                .addContainerGap(325, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,9 +187,11 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton1))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addComponent(jButton1)
+                    .addComponent(jButton6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Body", jPanel2);
@@ -357,6 +368,29 @@ public class NewJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void updateURL() {
+        String temp = url;
+        String method = (String) jComboBox1.getSelectedItem();
+        if (url != null) {
+            if (method.equals("GET")) {
+                for (int i=0; i<jTable1.getRowCount(); i++) {
+                     if (i == 0) {
+                         temp = temp+"?"+jTable1.getValueAt(i, 0)+"="+jTable1.getValueAt(i, 1);
+                     } else {
+                         temp = temp+"&"+jTable1.getValueAt(i, 0)+"="+jTable1.getValueAt(i, 1);
+                     }
+                }
+                jTextField1.setText("");
+                jTextField1.setText(temp);
+            } 
+            else{
+                jTextField1.setText(temp);
+            }
+        } 
+        else {
+            JOptionPane.showMessageDialog(null, "URL rỗng!");
+        }
+    }    
     //Gửi POST
     private void sendPost(String url, String method, Map<String, String> data,Map<String, String> head){
         try {
@@ -384,26 +418,7 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }
     
-    //Lấy headers sau mỗi lần Res
-    private void getHeadersRes(Map<String, String> map ){
-        headersRes.setRowCount(0);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            Payload pay = new Payload(entry.getKey(), entry.getValue());
-//            System.out.println(entry.getKey() + " " + entry.getValue());
-            headersRes.addRow(pay.toObjects());
-        }
-    }
-    
-    private void getCookiesRes(Map<String, String> map, String url){
-        cookiesRes.setRowCount(0);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            Payload pay = new Payload(entry.getKey(), entry.getValue());
-//            System.out.println(entry.getKey() + " " + entry.getValue());
-            cookiesRes.addRow(pay.toObjects());
-        }
-    }
-    
-    //chưa hoàn thành SendGET
+    //SendGET
     private void sendGet(String url, String method,Map<String, String> head){
         try {
             Connection.Response res = Jsoup.connect(url)
@@ -428,6 +443,26 @@ public class NewJFrame extends javax.swing.JFrame {
             Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    //Lấy headers sau mỗi lần Res
+    private void getHeadersRes(Map<String, String> map ){
+        headersRes.setRowCount(0);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            Payload pay = new Payload(entry.getKey(), entry.getValue());
+//            System.out.println(entry.getKey() + " " + entry.getValue());
+            headersRes.addRow(pay.toObjects());
+        }
+    }
+    
+    private void getCookiesRes(Map<String, String> map, String url){
+        cookiesRes.setRowCount(0);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            Payload pay = new Payload(entry.getKey(), entry.getValue());
+//            System.out.println(entry.getKey() + " " + entry.getValue());
+            cookiesRes.addRow(pay.toObjects());
+        }
+    }
+    
     //Lấy headers
     private  void getHeaders(){
         headersMap = new HashMap<>();
@@ -460,7 +495,6 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea1.setText("Đang gửi Request...");
         
         String url = jTextField1.getText().trim();
         String method = jComboBox1.getSelectedItem().toString();
@@ -520,28 +554,6 @@ public class NewJFrame extends javax.swing.JFrame {
             return;
         }      
     }//GEN-LAST:event_jButton2ActionPerformed
-    
-    private void updateURL() {
-        String temp = url;
-        String method = (String) jComboBox1.getSelectedItem();
-        if (url != null) {
-            if (method.equals("GET")) {
-                for (int i=0; i<jTable1.getRowCount(); i++) {
-                     if (i == 0) {
-                         temp = temp+"?"+jTable1.getValueAt(i, 0)+"="+jTable1.getValueAt(i, 1);
-                     } else {
-                         temp = temp+"&"+jTable1.getValueAt(i, 0)+"="+jTable1.getValueAt(i, 1);
-                     }
-                 }
-            } 
-            
-            jTextField1.setText("");
-            jTextField1.setText(temp);
-        } 
-        else {
-            JOptionPane.showMessageDialog(null, "URL rỗng!");
-        }
-    }
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int row = jTable1.getSelectedRow();
@@ -606,8 +618,12 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-        url = jTextField1.getText();
+        
     }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        url = jTextField1.getText();
+    }//GEN-LAST:event_jTextField1KeyReleased
 
     /**
      * @param args the command line arguments
@@ -650,6 +666,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
