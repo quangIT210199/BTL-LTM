@@ -1,7 +1,11 @@
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -59,7 +63,6 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -146,8 +149,6 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Value");
 
-        jButton6.setText("Sửa");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -156,9 +157,7 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jButton2))
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -169,9 +168,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addComponent(jButton1)))
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -185,13 +182,11 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton3))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Body", jPanel2);
@@ -293,7 +288,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Name", "Value", "Domain"
+                "Name", "Value"
             }
         ));
         jScrollPane5.setViewportView(jTable4);
@@ -400,8 +395,9 @@ public class NewJFrame extends javax.swing.JFrame {
                     .method(Connection.Method.POST)
                     .ignoreContentType(true)
                     .ignoreHttpErrors(true)
-                    .timeout(10*1000)
+                    .timeout(20*1000)
                     .execute();
+            
             //Thêm vào body
             jTextArea1.setText(res.parse().html());
             
@@ -426,11 +422,12 @@ public class NewJFrame extends javax.swing.JFrame {
                     .method(Connection.Method.GET)
                     .ignoreContentType(true)
                     .ignoreHttpErrors(true)
-                    .timeout(10*1000)
+                    .timeout(20*1000)
                     .execute();
             
             //Thêm vào body
-            jTextArea1.setText(res.parse().html());
+//            StringBuffer str = new StringBuffer(res.parse().html());
+            jTextArea1.setText(new StringBuffer(res.parse().html()).toString());
             
             //thêm cookies
             cookiesMapRes = res.cookies();
@@ -456,9 +453,9 @@ public class NewJFrame extends javax.swing.JFrame {
     
     private void getCookiesRes(Map<String, String> map, String url){
         cookiesRes.setRowCount(0);
+
         for (Map.Entry<String, String> entry : map.entrySet()) {
             Payload pay = new Payload(entry.getKey(), entry.getValue());
-//            System.out.println(entry.getKey() + " " + entry.getValue());
             cookiesRes.addRow(pay.toObjects());
         }
     }
@@ -666,7 +663,6 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
