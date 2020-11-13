@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Window;
@@ -30,6 +31,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +70,51 @@ public class NewJPanel extends javax.swing.JPanel {
         cookiesRes = (DefaultTableModel) jTable4.getModel();
         this.setLocale(getDefaultLocale());
     }
+    //Tìm kiếm Highlight
+    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
+        public MyHighlightPainter(Color color){
+            super(color);
+        }
+    }
+    //Màu highlight
+    Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.ORANGE);
+    //Phương thức Highlight
+    public void highligh(JTextComponent textComp, String pattern){
+        removeHighligh(textComp);//Highlight restart Method
+        
+        try {
+            Highlighter hilite = textComp.getHighlighter();
+            javax.swing.text.Document doc = textComp.getDocument();
+            
+            String text = doc.getText(0, doc.getLength());
+            int pos = 0;//vị trí
+            //Tìm word và highLight nó lên :V
+            while((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0){
+                //index, postion pattern, 
+                hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
+                
+                pos += pattern.length();
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    //Highlight restart
+    public void removeHighligh(JTextComponent textComp){
+        Highlighter hilite = textComp.getHighlighter();
+        
+        Highlighter.Highlight[] hilites = hilite.getHighlights();
+        
+        for (int i = 0; i < hilites.length; i++) {
+            if(hilites[i].getPainter() instanceof MyHighlightPainter)
+            {
+                hilite.removeHighlight(hilites[i]);
+            }
+        }
+    }
+    
     //Kiểm tra URL
     private boolean isUrlEmpty(){
         if(url.equals("")){
@@ -571,6 +620,8 @@ public class NewJPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton9 = new javax.swing.JButton();
+        jTextField2 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
@@ -614,6 +665,13 @@ public class NewJPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Type:");
 
+        jButton9.setText("Tìm Kiếm");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -624,7 +682,11 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 503, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addComponent(jButton9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addComponent(jScrollPane2)
         );
         jPanel3Layout.setVerticalGroup(
@@ -635,7 +697,10 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel7))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jButton9)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -689,7 +754,7 @@ public class NewJPanel extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 118, Short.MAX_VALUE))
+                .addGap(0, 123, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Headers", jPanel5);
@@ -910,7 +975,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane2)
+                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -1174,6 +1239,14 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         }.start();
     }//GEN-LAST:event_jButton8ActionPerformed
+    //Nút tìm kiếm
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        if(!jTextArea1.getText().equals("") && !url.equals("")){
+            highligh(jTextArea1, jTextField2.getText());
+        }else {
+            JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
     
     private void showListHistory(){
         //lấy parent cho tk Panel đang sử dụng
@@ -1253,6 +1326,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1280,6 +1354,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JTable jTable4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
