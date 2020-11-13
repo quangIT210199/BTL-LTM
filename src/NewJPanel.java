@@ -1212,6 +1212,7 @@ public class NewJPanel extends javax.swing.JPanel {
                     }
                 }else if(name.equals("body") && methodFile.equals("POST")){
                     reader.beginObject();
+                    body.setRowCount(0);
                     while (reader.hasNext()){
                         Payload da = new Payload(reader.nextName(), reader.nextString());
                         body.addRow(da.toObjects());
@@ -1220,6 +1221,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 }
                 else if(name.equals("headers")){
                     reader.beginObject();
+                    headers.setRowCount(0);
                     while (reader.hasNext()){
                         Payload da = new Payload(reader.nextName(), reader.nextString());
                         headers.addRow(da.toObjects());
