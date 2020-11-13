@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package FileJSON;
+package TestJson;
 
 /**
  *
@@ -16,10 +16,14 @@ import java.io.OutputStreamWriter;
  
 import com.google.gson.stream.JsonWriter;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
  
 public class GsonStreamingWriterExample {
     public static void main(String args[]) throws IOException {
-        OutputStream out = new FileOutputStream("D:\\Hoc_Ky_1_Nam4\\LTM\\RequestSoftware\\src\\FileJSON\\result.json");
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        System.out.println(timeStamp);
+        OutputStream out = new FileOutputStream("D:\\Hoc_Ky_1_Nam4\\LTM\\RequestSoftware\\src\\TestJson\\result.json");
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
  
         writer.beginObject(); // {

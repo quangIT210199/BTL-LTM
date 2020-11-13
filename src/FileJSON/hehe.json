@@ -1,1 +1,0 @@
-{"url":"http://api.openweathermap.org/data/2.5/weather?q=haNoi&&units=metric&appid=7ef4ccb00ed20ff77b4b38f34bb7b32f&fbclid=IwAR1RUe_zaZQ9V0q2tgx99CNG9fze6XTQYQPyLTsx1dTwAB2EeTYcicD0WcY","method":"GET","headers":{"User-Agent":"Mozilla/5.0","Connection":"keep-alive","Accept-Encoding":"gzip, deflate, br"}}

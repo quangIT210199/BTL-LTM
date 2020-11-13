@@ -2,20 +2,26 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.Window;
 import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -46,6 +52,9 @@ public class NewJPanel extends javax.swing.JPanel {
     private String url = "";
     private String type = "", status="";
     private String str = "";
+    private String dateSend = "";
+    
+    private Main mainQ;
     
     public Connection.Response res;
     private Document documentSearch;
@@ -110,6 +119,8 @@ public class NewJPanel extends javax.swing.JPanel {
             getHeadersRes(headersMapRes);
             
             status = res.statusCode() +" "+ res.statusMessage();
+            //Lưu lịch sử
+            writeFileJson(dateSend);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex);
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -150,6 +161,8 @@ public class NewJPanel extends javax.swing.JPanel {
             getHeadersRes(headersMapRes);
             //lấy status code
             status = res.statusCode() +" "+ res.statusMessage();
+            //Lưu lịch sử
+            writeFileJson(dateSend);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex);
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -512,14 +525,17 @@ public class NewJPanel extends javax.swing.JPanel {
             //Lưu url
             writer.name("url").value(url);
             //Lưu method
-            writer.name("method").value(jComboBox1.getSelectedItem().toString());
-//            //Lưu Body
-//            writer.name("body");
-//            writer.beginObject();// {
-//            for (Map.Entry<String, String> entry : bodyMap.entrySet()) {
-//                writer.name(entry.getKey()).value(entry.getValue());
-//            }
-//            writer.endObject(); // }
+            String method = jComboBox1.getSelectedItem().toString();
+            writer.name("method").value(method);
+            if(method.equals("POST")){
+                //Lưu Body
+                writer.name("body");
+                writer.beginObject();// {
+                for (Map.Entry<String, String> entry : bodyMap.entrySet()) {
+                    writer.name(entry.getKey()).value(entry.getValue());
+                }
+                writer.endObject(); // }
+            }
             //Lưu Headers
             writer.name("headers");
             writer.beginObject();// {
@@ -527,6 +543,8 @@ public class NewJPanel extends javax.swing.JPanel {
                 writer.name(entry.getKey()).value(entry.getValue());
             }
             writer.endObject(); // }
+            
+            writer.name("TimeSend").value(dateSend);//Tgian gửi
             
             writer.endObject(); // }
             writer.close();
@@ -585,7 +603,6 @@ public class NewJPanel extends javax.swing.JPanel {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -885,13 +902,6 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
-        jButton9.setText("Lưu File");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -902,22 +912,18 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTabbedPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton9)
-                                .addGap(97, 97, 97)
-                                .addComponent(jButton8)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1)))
-                        .addContainerGap())))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton8)
+                        .addGap(27, 27, 27)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -929,13 +935,11 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
                 .addComponent(jTabbedPane2))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -994,13 +998,13 @@ public class NewJPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "URL không được rỗng!");
         }
+        System.out.println(url);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int row = jTable1.getSelectedRow();
         if(row < 0 || row >= jTable1.getRowCount()){
             JOptionPane.showMessageDialog(null, "Chọn dòng để xóa!!!");
-            return;
         }
         else{
             if(!isUrlEmpty()){
@@ -1016,25 +1020,28 @@ public class NewJPanel extends javax.swing.JPanel {
             @Override
             public void run() {
                 try {
-                    String url = jTextField1.getText().trim();
+                    url = jTextField1.getText().trim();//sửa đây r
+//                    System.out.println(url + "vccc");
                     String method = jComboBox1.getSelectedItem().toString();
                     getHeaders();
 
                     if(!isUrlEmpty()){
+                        dateSend = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(Calendar.getInstance().getTime()); // Lưu tgian gửi
                         if(method.equals("GET")){
                             sendGet(url, method, headersMap, cookiesMapSend);
+                            
                         }
                         if(method.equals("POST")){
                             getBody();
                             sendPost(url, method , bodyMap, headersMap, cookiesMapSend);
                         }
+                        showListHistory();
                     }
                     else {
                         JOptionPane.showMessageDialog(null, "URL không được rỗng!");
-                        return;
                     }
                 }
-                catch (Exception e) {
+                catch (HeadlessException e) {
                     JOptionPane.showMessageDialog(null, e);
                     System.out.println(e);
                 }
@@ -1055,7 +1062,6 @@ public class NewJPanel extends javax.swing.JPanel {
         int row = jTable2.getSelectedRow();
         if(row < 0 || row >= jTable2.getRowCount()){
             JOptionPane.showMessageDialog(null, "Chọn dòng để xóa!!!");
-            return;
         }
         else{
             headers.removeRow(row);
@@ -1089,7 +1095,6 @@ public class NewJPanel extends javax.swing.JPanel {
             jTextField6.setText("");
         } else {
             JOptionPane.showMessageDialog(null, "Key không được rỗng!");
-            return;
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1161,7 +1166,7 @@ public class NewJPanel extends javax.swing.JPanel {
                     
                     String dir = chooser.getSelectedFile().toString();
                     saveFile(dir);
-                    JOptionPane.showMessageDialog(null, "Lưu ảnh thành công");
+                    JOptionPane.showMessageDialog(null, "Done!!!");
                 }else {
                     JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
                 }
@@ -1169,16 +1174,74 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         }.start();
     }//GEN-LAST:event_jButton8ActionPerformed
+    
+    private void showListHistory(){
+        //lấy parent cho tk Panel đang sử dụng
+        Window parentWindow = SwingUtilities.windowForComponent(this); 
+        // or pass 'this' if you are inside the panel
+        Frame parentFrame = null;
+        if (parentWindow instanceof Frame) {
+            parentFrame = (Frame)parentWindow;
+        }
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        String str2 = "hehe";
+        mainQ = (Main) parentFrame;
+        mainQ.showListFile();
+    }
+    
+    public void ganData(String nameFile){
+        String fileDir = "D:\\Hoc_Ky_1_Nam4\\LTM\\RequestSoftware\\src\\FileJSON\\" + nameFile;
+        
         try {
-            writeFileJson(str2);
+            InputStream out = new FileInputStream(fileDir);
+            JsonReader reader = new JsonReader(new InputStreamReader(out, "UTF-8"));
+            reader.beginObject();
+            String methodFile = "";
+            while(reader.hasNext()){
+                String name = reader.nextName();
+                if(name.equals("url")){
+                    jTextField1.setText(reader.nextString());
+                }
+                else if(name.equals("method")){
+                    methodFile = reader.nextString();
+                    
+                    if(methodFile.equals("GET")){
+                        jComboBox1.setSelectedIndex(0);
+                    }
+                    else {
+                        jComboBox1.setSelectedIndex(1);
+                    }
+                }else if(name.equals("body") && methodFile.equals("POST")){
+                    reader.beginObject();
+                    while (reader.hasNext()){
+                        Payload da = new Payload(reader.nextName(), reader.nextString());
+                        body.addRow(da.toObjects());
+                    }
+                    reader.endObject();
+                }
+                else if(name.equals("headers")){
+                    reader.beginObject();
+                    while (reader.hasNext()){
+                        Payload da = new Payload(reader.nextName(), reader.nextString());
+                        headers.addRow(da.toObjects());
+                    }
+                    reader.endObject();
+                }
+                else {// unexpected value, skip it or generate error
+                    reader.skipValue();
+                }
+            }
+            System.out.println("Done tải file lên");
+            
+            reader.endObject();
+            reader.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton9ActionPerformed
-
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -1188,7 +1251,6 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
