@@ -83,26 +83,25 @@ public class NewJPanel extends javax.swing.JPanel {
         javax.swing.text.Document document = jTextArea1.getDocument();
         
         try {
-            if(lastMatch + find.length() >= document.getLength())
-            lastMatch = 0;
+            if(lastMatch + find.length() >= document.getLength()){
+                lastMatch = 0;
+            }
             //Tạo vòng for để next
             for (; lastMatch + find.length() < document.getLength() ; lastMatch++) {
-                String match = document.getText(lastMatch, find.length());
-                
+                String match = document.getText(lastMatch, find.length());//lấy độ dài của chuỗi jtextArea
+                //So sánh chuỗi
                 if(find.equalsIgnoreCase(match)){
-                    if(highlightTag != null){
+                    if(highlightTag != null){//Trường hợp có màu thì loại
                         jTextArea1.getHighlighter().removeHighlight(highlightTag);
-                        System.out.println("1 nhé");
                     }
-                    
+                    //Gán màu cho cái mới
                     if(highlightPainter == null){
                         highlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.ORANGE);
-                        System.out.println("2 nhé");
                     }
-                    
+                    //set màu
                     highlightTag = jTextArea1.getHighlighter().addHighlight(lastMatch, lastMatch + find.length(), highlightPainter);
                 
-                    
+                    //Dịch chuyển theo cái tìm
                     jTextArea1.scrollRectToVisible(jTextArea1.modelToView(lastMatch));
                     
                     lastMatch += find.length();
