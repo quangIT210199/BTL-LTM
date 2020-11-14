@@ -10,14 +10,20 @@ package SearchHighLight;
  * @author quang
  */
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 
 public class Word_highlight extends javax.swing.JFrame {
-
+    private int lastMatch;
+    private String find = "Method";
+    private DefaultHighlighter.DefaultHighlightPainter highlightPainter;
+    private Object highlightTag;
     /**
      * Creates new form Word_highlight
      */
@@ -32,6 +38,8 @@ public class Word_highlight extends javax.swing.JFrame {
     }
     //Màu highlight
     Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.PINK);
+    
+    Highlighter.HighlightPainter myHighlightPainterQ = new MyHighlightPainter(Color.GRAY);
     //Phương thức Highlight
     public void highligh(JTextComponent textComp, String pattern){
         removeHighligh(textComp);//Highlight restart Method
@@ -43,18 +51,19 @@ public class Word_highlight extends javax.swing.JFrame {
             String text = doc.getText(0, doc.getLength());
             int pos = 0;//vị trí
             //Tìm word và highLight nó lên :V
+            //int indexOf(String substring, int fromIndex) Trả về vị trị của chuỗi con đã cho tính từ vị trí fromIndex.
             while((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0){
                 //index, postion pattern, 
                 hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
                 
                 pos += pattern.length();
-            }
-            
+                
+            }     
         } catch (Exception e) {
             System.out.println(e);
         }
     }
-    
+   
     //Highlight restart
     public void removeHighligh(JTextComponent textComp){
         Highlighter hilite = textComp.getHighlighter();
@@ -70,6 +79,41 @@ public class Word_highlight extends javax.swing.JFrame {
     }
     
     
+    public void highlightNext(){
+        Document document = jTextArea1.getDocument();
+        
+        try {
+            if(lastMatch + find.length() >= document.getLength())
+            lastMatch = 0;
+            //Tạo vòng for để next
+            for (; lastMatch + find.length() < document.getLength() ; lastMatch++) {
+                String match = document.getText(lastMatch, find.length());
+                
+                if(find.equalsIgnoreCase(match)){
+                    if(highlightTag != null){
+                        jTextArea1.getHighlighter().removeHighlight(highlightTag);
+                        System.out.println("1 nhé");
+                    }
+                    
+                    if(highlightPainter == null){
+                        highlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+                        System.out.println("2 nhé");
+                    }
+                    
+                    highlightTag = jTextArea1.getHighlighter().addHighlight(lastMatch, lastMatch + find.length(), highlightPainter);
+                
+                    
+                    jTextArea1.scrollRectToVisible(jTextArea1.modelToView(lastMatch));
+                    
+                    lastMatch += find.length();
+                    break;
+                }
+            }
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -83,6 +127,7 @@ public class Word_highlight extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,6 +142,13 @@ public class Word_highlight extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
+        jButton2.setText("Next");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,7 +161,9 @@ public class Word_highlight extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,7 +171,8 @@ public class Word_highlight extends javax.swing.JFrame {
                 .addGap(95, 95, 95)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(181, Short.MAX_VALUE))
@@ -129,6 +184,15 @@ public class Word_highlight extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         highligh(jTextArea1, jTextField1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String text = jTextField1.getText();
+        if (!text.equals(find)) {
+            find = text;
+            lastMatch = 0;
+        }
+        highlightNext();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -167,6 +231,7 @@ public class Word_highlight extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;

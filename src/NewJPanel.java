@@ -31,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
@@ -62,6 +63,13 @@ public class NewJPanel extends javax.swing.JPanel {
     
     public Connection.Response res;
     private Document documentSearch;
+    
+    //Khai báo của phần Search highlight
+    private int lastMatch;
+    private String find = "Method";
+    private DefaultHighlighter.DefaultHighlightPainter highlightPainter;
+    private Object highlightTag;
+    //
     public NewJPanel() {
         initComponents();
         body = (DefaultTableModel)jTable1.getModel();
@@ -70,50 +78,87 @@ public class NewJPanel extends javax.swing.JPanel {
         cookiesRes = (DefaultTableModel) jTable4.getModel();
         this.setLocale(getDefaultLocale());
     }
-    //Tìm kiếm Highlight
-    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
-        public MyHighlightPainter(Color color){
-            super(color);
-        }
-    }
-    //Màu highlight
-    Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.ORANGE);
-    //Phương thức Highlight
-    public void highligh(JTextComponent textComp, String pattern){
-        removeHighligh(textComp);//Highlight restart Method
+    
+    public void highlightNext(){
+        javax.swing.text.Document document = jTextArea1.getDocument();
         
         try {
-            Highlighter hilite = textComp.getHighlighter();
-            javax.swing.text.Document doc = textComp.getDocument();
-            
-            String text = doc.getText(0, doc.getLength());
-            int pos = 0;//vị trí
-            //Tìm word và highLight nó lên :V
-            while((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0){
-                //index, postion pattern, 
-                hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
+            if(lastMatch + find.length() >= document.getLength())
+            lastMatch = 0;
+            //Tạo vòng for để next
+            for (; lastMatch + find.length() < document.getLength() ; lastMatch++) {
+                String match = document.getText(lastMatch, find.length());
                 
-                pos += pattern.length();
+                if(find.equalsIgnoreCase(match)){
+                    if(highlightTag != null){
+                        jTextArea1.getHighlighter().removeHighlight(highlightTag);
+                        System.out.println("1 nhé");
+                    }
+                    
+                    if(highlightPainter == null){
+                        highlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.ORANGE);
+                        System.out.println("2 nhé");
+                    }
+                    
+                    highlightTag = jTextArea1.getHighlighter().addHighlight(lastMatch, lastMatch + find.length(), highlightPainter);
+                
+                    
+                    jTextArea1.scrollRectToVisible(jTextArea1.modelToView(lastMatch));
+                    
+                    lastMatch += find.length();
+                    break;
+                }
             }
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
     }
     
-    //Highlight restart
-    public void removeHighligh(JTextComponent textComp){
-        Highlighter hilite = textComp.getHighlighter();
-        
-        Highlighter.Highlight[] hilites = hilite.getHighlights();
-        
-        for (int i = 0; i < hilites.length; i++) {
-            if(hilites[i].getPainter() instanceof MyHighlightPainter)
-            {
-                hilite.removeHighlight(hilites[i]);
-            }
-        }
-    }
+    //Phần này chưa muốn dùng
+//    //Tìm kiếm Highlight
+//    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
+//        public MyHighlightPainter(Color color){
+//            super(color);
+//        }
+//    }
+//    //Màu highlight
+//    Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.ORANGE);
+//    //Phương thức Highlight
+//    public void highligh(JTextComponent textComp, String pattern){
+//        removeHighligh(textComp);//Highlight restart Method
+//        
+//        try {
+//            Highlighter hilite = textComp.getHighlighter();
+//            javax.swing.text.Document doc = textComp.getDocument();
+//            
+//            String text = doc.getText(0, doc.getLength());
+//            int pos = 0;//vị trí
+//            //Tìm word và highLight nó lên :V
+//            while((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0){
+//                //index, postion pattern, 
+//                hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
+//                
+//                pos += pattern.length();
+//            }
+//            
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//    }
+//    
+//    //Highlight restart
+//    public void removeHighligh(JTextComponent textComp){
+//        Highlighter hilite = textComp.getHighlighter();
+//        
+//        Highlighter.Highlight[] hilites = hilite.getHighlights();
+//        
+//        for (int i = 0; i < hilites.length; i++) {
+//            if(hilites[i].getPainter() instanceof MyHighlightPainter)
+//            {
+//                hilite.removeHighlight(hilites[i]);
+//            }
+//        }
+//    }
     
     //Kiểm tra URL
     private boolean isUrlEmpty(){
@@ -655,6 +700,7 @@ public class NewJPanel extends javax.swing.JPanel {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
@@ -702,7 +748,8 @@ public class NewJPanel extends javax.swing.JPanel {
                         .addComponent(jButton9)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(85, 85, 85))
         );
 
         jTabbedPane2.addTab("Body", jPanel3);
@@ -1242,7 +1289,13 @@ public class NewJPanel extends javax.swing.JPanel {
     //Nút tìm kiếm
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         if(!jTextArea1.getText().equals("") && !url.equals("")){
-            highligh(jTextArea1, jTextField2.getText());
+//            highligh(jTextArea1, jTextField2.getText()); // chưa dùng dc
+            String text = jTextField2.getText();
+            if (!text.equals(find)) {
+                find = text;
+                lastMatch = 0;
+            }
+            highlightNext();
         }else {
             JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
         }
