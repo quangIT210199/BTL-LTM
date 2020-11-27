@@ -1,0 +1,30 @@
+Lớp này đã xây dựng sẵn cho bạn một hàng đợi có tên là Task Queue, và một Pool trong đó. Khi bạn
+có quá nhiều Thread (chính là các Runnable trong Application như hình dưới), thì thay vì cứ start
+chúng thành các Thread, bạn cứ “quăng” tất cả Runnable vào trong ThreadPoolExecutor đã khai báo.
+Tất cả các Runnable này sau đó được ThreadPoolExecutor để vào trong Task Queue. Và sẽ chỉ lấy ra
+đủ số lượng Runnable mà bạn đã chỉ định, để thực thi chúng thành các Thread. Dễ dàng thôi đúng
+không.
+
+-Executors: Đây được xem như một Helper Class. Nó cũng chỉ là một class thông thường thôi, 
+nhưng lại cung cấp các phương thức hữu dụng, và dễ dàng nhất, để khởi tạo ra các ThreadPoolExecutor. 
+Chúng ta gọi các lớp như vậy là Helper Class. Một lát bạn để ý xem Executors rất dễ sử dụng như thế nào nhé.
+-Executor: Là một interface. Nó chỉ chứa mỗi phương thức execute(Runnable). 
+Chính ThreadPoolExecutor phải implement interface này và hiện thực phương thức này,
+giúp bạn đưa một Runnable vào Thread Pool một cách dễ dàng.
+-ExecutorService: Là lớp triển khai của của Executor, và vì vậy nó cũng là một interface. 
+Nó cung cấp một số phương thức ràng buộc mở rộng hơn Executor mà lát nữa bạn sẽ được làm quen ở mục tiếp theo.
+-Thực ra nếu nói sâu hơn nữa còn có ScheduledExecutorService, 
+thằng này lại là lớp triển khai của ExecutorService trên đây. 
+Lớp này cho phép bạn lên lịch (schedule) cho việc thực thi các tác vụ, 
+tuy nhiên do bài viết hôm nay vốn đã rất dài rồi nên mình sẽ không dành thêm giấy mực để trình bày đến lớp này nhé.
+
+-Đó kà submit() có trả về kết quả cuối cùng thông qua lớp Future
+-invokeAny() và invokeAll(): Một cách sử dụng khác của Thread Pool, 
+ngoài việc dùng execute() hay submit() để đưa vào Pool từng Runnable hay Callable. 
+Với 2 phương thức này bạn có thể truyền vào chúng danh sách các Callable.
+Phương thức invokeAny() sẽ thực thi các Callable theo quy luật khai báo Thead Pool như chúng ta làm quen ở các bài ví dụ trên,
+nhưng khi có bất kỳ Callable nào hoàn thành trong danh sách các Callable truyền vào đó, 
+Thread Pool sẽ chấm dứt các Thread còn lại, dù cho chúng đã được đưa vào Pool và đang chờ thực thi. 
+invokeAll() thì ngược lại, nó sẽ thực thi tất cả các Callable 
+và chờ nhận các kết quả trả về của các Callable này thông qua danh sách các đối tượng Future.
+

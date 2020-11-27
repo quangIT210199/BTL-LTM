@@ -24,12 +24,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -217,6 +220,9 @@ public class NewJPanel extends javax.swing.JPanel {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex);
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(IllegalArgumentException ex){
+            JOptionPane.showMessageDialog(null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         end = System.currentTimeMillis();
         
@@ -238,7 +244,7 @@ public class NewJPanel extends javax.swing.JPanel {
                     .ignoreHttpErrors(true)
                     .timeout(20*1000)
                     .execute();
-
+            
             //Thêm vào body
             str = res.body();
             //gán vào để tìm kiếm
@@ -257,6 +263,9 @@ public class NewJPanel extends javax.swing.JPanel {
             //Lưu lịch sử
             writeFileJson(dateSend);
         } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(IllegalArgumentException ex){
             JOptionPane.showMessageDialog(null, ex);
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -717,6 +726,12 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -810,6 +825,11 @@ public class NewJPanel extends javax.swing.JPanel {
                 jTextField1ActionPerformed(evt);
             }
         });
+        jTextField1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextField1PropertyChange(evt);
+            }
+        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
@@ -893,10 +913,10 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -905,14 +925,14 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton3)))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Body", jPanel2);
@@ -1029,12 +1049,12 @@ public class NewJPanel extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton8)
-                        .addGap(27, 27, 27)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))))
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1118,34 +1138,70 @@ public class NewJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Chọn dòng để xóa!!!");
         }
         else{
-            if(!isUrlEmpty()){
+//            if(!isUrlEmpty()){
                 body.removeRow(row);
                 updateURL();
-            }
+//            }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jButton1.setEnabled(false);
-        new Thread() {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    url = jTextField1.getText().trim();//sửa đây r
+////                    System.out.println(url + "vccc");
+//                    String method = jComboBox1.getSelectedItem().toString();
+//                    getHeaders();
+//
+//                    if(!isUrlEmpty()){
+//                        dateSend = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(Calendar.getInstance().getTime()); // Lưu tgian gửi
+//                        if(method.equals("GET")){
+//                            sendGet(url, method, headersMap, cookiesMapSend);
+//                            
+//                        }
+//                        else if(method.equals("POST")){
+//                            getBody();
+//                            sendPost(url, method , bodyMap, headersMap, cookiesMapSend);
+//                        }
+//                        
+//                        showListHistory();
+//                    }
+//                    else {
+//                        JOptionPane.showMessageDialog(null, "URL không được rỗng!");
+//                    }
+//                }
+//                catch (HeadlessException e) {
+//                    JOptionPane.showMessageDialog(null, e);
+//                    System.out.println(e);
+//                }
+//                
+//            }
+//        }.start();
+//        jButton1.setEnabled(true);
+        SwingWorker sw = new SwingWorker(){
             @Override
-            public void run() {
+            protected String doInBackground() throws Exception {
+                String str = "Send Request";
                 try {
                     url = jTextField1.getText().trim();//sửa đây r
 //                    System.out.println(url + "vccc");
                     String method = jComboBox1.getSelectedItem().toString();
                     getHeaders();
-
+                    
                     if(!isUrlEmpty()){
+                        publish("Đang gửi request...");
                         dateSend = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(Calendar.getInstance().getTime()); // Lưu tgian gửi
                         if(method.equals("GET")){
                             sendGet(url, method, headersMap, cookiesMapSend);
-                            
                         }
                         if(method.equals("POST")){
                             getBody();
                             sendPost(url, method , bodyMap, headersMap, cookiesMapSend);
                         }
+                        
                         showListHistory();
                     }
                     else {
@@ -1154,11 +1210,33 @@ public class NewJPanel extends javax.swing.JPanel {
                 }
                 catch (HeadlessException e) {
                     JOptionPane.showMessageDialog(null, e);
-                    System.out.println(e);
                 }
-                jButton1.setEnabled(true);
+                
+                return str;
             }
-        }.start();
+            
+            @Override
+            protected void process(List chunks){//Nhận các khối dữ liệu từ phương thức xuất bản một cách không đồng bộ trên Chuỗi sự kiện gửi đi. Vì phương thức này được gọi không đồng bộ, nên công bố () có thể đã được gọi nhiều lần.
+                jButton1.setText(chunks.get(0).toString());
+            }
+            
+            protected void done()  
+            { 
+                try {
+                    String statusMsg = (String)get();
+                    
+                    jButton1.setText(statusMsg);
+                    
+                    jButton1.setEnabled(true);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        
+        sw.execute();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
@@ -1299,6 +1377,14 @@ public class NewJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
         }
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+        
+    }//GEN-LAST:event_jTextField2KeyReleased
+
+    private void jTextField1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField1PropertyChange
+
+    }//GEN-LAST:event_jTextField1PropertyChange
     
     private void showListHistory(){
         //lấy parent cho tk Panel đang sử dụng
