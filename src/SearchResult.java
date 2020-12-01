@@ -50,6 +50,7 @@ public class SearchResult extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Trích xuất dữ liệu");
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);

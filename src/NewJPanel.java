@@ -116,7 +116,25 @@ public class NewJPanel extends javax.swing.JPanel {
             }
     }
     
-    //Phần này chưa muốn dùng
+    public void countTextSearch(JTextComponent textComp, String pattern){
+        javax.swing.text.Document doc = textComp.getDocument();
+        try {
+            String text = doc.getText(0, doc.getLength());
+            int pos = 0;//vị trí
+            int count = 0;
+            //Tìm word và highLight nó lên :V
+            while((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0){
+                //index, postion pattern, 
+                pos += pattern.length();
+                count++;
+            }
+            jLabel10.setText("SL: " + count);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //Phần này chưa dùng
 //    //Tìm kiếm Highlight
 //    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
 //        public MyHighlightPainter(Color color){
@@ -353,7 +371,6 @@ public class NewJPanel extends javax.swing.JPanel {
                 headersMap.put(headers.getValueAt(i, 0).toString(), headers.getValueAt(i, 1).toString());
             }
         }
-    
     }
     //Lấy body
     private void getBody(){
@@ -476,7 +493,7 @@ public class NewJPanel extends javax.swing.JPanel {
         return null;
     }
     
-    //Hàm này để tk Form con gọi nhé
+    //Hàm này để tk Form con gọi
     public String SearchMethod(String keySearch){
         String tmp = null;
         System.out.println("Vào rồi nè");
@@ -504,12 +521,10 @@ public class NewJPanel extends javax.swing.JPanel {
         return type;
     }
     
-    //Set giá trị cho cookies
-    public void setCookies(Map<String, String> cookies){
+    //Set giá trị cho cookies để gửi đi
+    public Map<String, String> setCookies(Map<String, String> cookies){
         this.cookiesMapSend = cookies;
-        for (Map.Entry<String, String> entry : cookiesMapSend.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
+        return this.cookiesMapSend;
     }
 
     //Lấy link các img để lưu
@@ -592,7 +607,8 @@ public class NewJPanel extends javax.swing.JPanel {
                 out.close();
                 in.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Can not Dowload File !");
+            System.out.println("Can not Dowload File !");
+//            JOptionPane.showMessageDialog(null, "Can not Dowload File !");
         }
     }
     //Lưu file
@@ -673,7 +689,9 @@ public class NewJPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jButton9 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -710,6 +728,7 @@ public class NewJPanel extends javax.swing.JPanel {
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 16)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
@@ -719,12 +738,9 @@ public class NewJPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Type:");
 
-        jButton9.setText("Tìm Kiếm");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
+        jLabel9.setText("Tìm kiếm");
+
+        jLabel10.setText("SL: 0");
 
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -741,13 +757,19 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
-                .addComponent(jButton9)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane2)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(113, 113, 113)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(472, 472, 472))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 928, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -759,7 +781,9 @@ public class NewJPanel extends javax.swing.JPanel {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel7)
-                        .addComponent(jButton9)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel10)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -902,11 +926,11 @@ public class NewJPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -924,14 +948,14 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3)))
+                        .addComponent(jButton3)
+                        .addComponent(jLabel1)))
                 .addContainerGap())
         );
 
@@ -976,31 +1000,30 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(177, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField5)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel4)
-                        .addComponent(jButton4)
-                        .addComponent(jButton5)))
-                .addGap(4, 4, 4))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton5))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Headers", jPanel1);
@@ -1049,8 +1072,8 @@ public class NewJPanel extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1118,13 +1141,11 @@ public class NewJPanel extends javax.swing.JPanel {
                     updateURL();
                 } else {
                     JOptionPane.showMessageDialog(null, "Key không được trùng!");
-                    return;
                 }
                 jTextField3.setText("");
                 jTextField4.setText("");
             } else {
                 JOptionPane.showMessageDialog(null, "Key không được rỗng!");
-                return;
             }
         } else {
             JOptionPane.showMessageDialog(null, "URL không được rỗng!");
@@ -1177,7 +1198,6 @@ public class NewJPanel extends javax.swing.JPanel {
 //                    JOptionPane.showMessageDialog(null, e);
 //                    System.out.println(e);
 //                }
-//                
 //            }
 //        }.start();
 //        jButton1.setEnabled(true);
@@ -1235,7 +1255,6 @@ public class NewJPanel extends javax.swing.JPanel {
                 }
             }
         };
-        
         sw.execute();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -1273,9 +1292,6 @@ public class NewJPanel extends javax.swing.JPanel {
             if (!flag) {
                 Payload x = new Payload(key, value);
                 headers.addRow(x.toObjects());
-                for (int i=0; i<jTable2.getRowCount(); i++) {
-
-                }
             } else {
                 JOptionPane.showMessageDialog(null, "Key không được trùng!");
                 return;
@@ -1321,6 +1337,7 @@ public class NewJPanel extends javax.swing.JPanel {
         }
         
         CookiesTable c = new CookiesTable(parentFrame, true);
+        c.setCookies(cookiesMapSend);
         c.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -1347,15 +1364,16 @@ public class NewJPanel extends javax.swing.JPanel {
                     if (chooser.showOpenDialog(parentWindow) == JFileChooser.APPROVE_OPTION) { 
                         System.out.println("getCurrentDirectory(): " +  chooser.getCurrentDirectory());
                         System.out.println("getSelectedFile() : " +  chooser.getSelectedFile());
+                        
+                        chooser.setAcceptAllFileFilterUsed(false);
+                    
+                        String dir = chooser.getSelectedFile().toString();
+                        saveFile(dir);
+                        JOptionPane.showMessageDialog(null, "Done!!!");
                     }
                     else {
-                        System.out.println("No Selection ");
+                        JOptionPane.showMessageDialog(null, "Chưa chọn đường dẫn!!!");
                     }
-                    chooser.setAcceptAllFileFilterUsed(false);
-                    
-                    String dir = chooser.getSelectedFile().toString();
-                    saveFile(dir);
-                    JOptionPane.showMessageDialog(null, "Done!!!");
                 }else {
                     JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
                 }
@@ -1363,8 +1381,8 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         }.start();
     }//GEN-LAST:event_jButton8ActionPerformed
-    //Nút tìm kiếm
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if(!jTextArea1.getText().equals("") && !url.equals("")){
 //            highligh(jTextArea1, jTextField2.getText()); // chưa dùng dc
             String text = jTextField2.getText();
@@ -1372,18 +1390,26 @@ public class NewJPanel extends javax.swing.JPanel {
                 find = text;
                 lastMatch = 0;
             }
-            highlightNext();
+            highlightNext();//highliht chữ lên
+            
+            new Thread(){
+                @Override
+                public void run(){
+                    if(!"".equals(text)){
+                        countTextSearch(jTextArea1, text);                   
+                    }
+                    else{
+                        jLabel10.setText("SL: 0");
+                    }
+                }
+            }.start();
         }else {
             JOptionPane.showMessageDialog(null, "Dữ liệu không được trống!");
         }
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
-        
     }//GEN-LAST:event_jTextField2KeyReleased
 
     private void jTextField1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField1PropertyChange
-
+//        System.out.println(jTextField1);
     }//GEN-LAST:event_jTextField1PropertyChange
     
     private void showListHistory(){
@@ -1464,15 +1490,17 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

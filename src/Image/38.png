@@ -62,7 +62,7 @@
 </div>
 
 
-<input type="hidden" id="keyword-default" value="one">
+<input type="hidden" id="keyword-default" value="vợ">
 <div class="outsite on">
     <section class="top-bar on" id="home">
     <div class="container">
@@ -403,8 +403,8 @@
                             </div>
                             <div class="col-md-4 col-sm-6 col-xs-6">
                                 <p class="captcha-error">
-                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAeBAMAAAAodabAAAAAIVBMVEX///+Aw/FgtO4hludBperf8Pug0vS/4fgCiOT///////9+IHzjAAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAXxJREFUOI3tUsFOwkAQ3UIXOBINhiMaDD0SCdKjGtQeSQyxx0JVejQxCke3LXQ+2+3uzG6JHPTOHJqXeTM7816HsWMcDP7+v/rmog/bX8mTjsWvCOLRdHoxk2ADAPeYfBkNNPAAzGQXsnPV1ZWVKh2K1QzJmky1S+DAWTCmllYGINT+8/XaL2tb32aFjZh3ixLUC+YKyoZDvhjQkpmirRCvjZXhEEn10I3V6O7Ut6i2OIKqgNZNerYlUe21tH+LbDJm7pZagogesuYxX5nSkJoL8qaTKPmboRqpI4ArGtjItaK7t9PMsAIVS0tpn2UA5F7diOC+XsKdxKBQa0trq/jIEZhnzBJexBIyudrSBHzaWGK6JeOkyhKxbxSW1lKb0u5wIIHlt9s2NMcpof2FDr4iD0hPYRBxH4/sS/L53v6M51MfjyOYoBaW5IGR/IBXVDkIgCzS6En+oh7OhUukY7rVytk1V3Tn3INrhM+fZu3l6BFp61clDiaP8ff4AXSsWfDWM6QIAAAAAElFTkSuQmCC"/>
-                                    <input type="hidden" name="idcaptcha" id="idcaptcha" value="Qfb96e7c815e9ec0731f28012c1eeef5f" />
+                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAeBAMAAAAodabAAAAAIVBMVEX///8hludBpepgtO6Aw/Gg0vS/4fjf8PsCiOT///////87HAdbAAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAXxJREFUOI3tkjFPw0AMha9NeulYujQjokjcWKpKZCwSQ8YApc2YgUoZA4iSkTRp8c/mYp+vp8KCWOsl1pM/+9k5IU4hguxv9XIxha+fcsHJ+4qzNWc5AFzZyrc5zY3ghoRXAJLEPUBCWdksbUcRhAP8dgAqUlStGnIDY7Ujrf/p2HkBQuJRoLC5rAoJ1KURvmnTcRYJztJzTMJM5Aj7eoRCP+UA5Ta6e2fIKEckAG7laS/pBHfWSExrefX0suAhBSGy4lZdjZDWIgSLnr7YnocYUW6pPyElWuzrLCbbcvx0W/EQF2kYoQN5MLuG88NpE7IzHCs02RojxLOIUACRRUREB4U2MkZ2fDGDyLtVfkBiWutjs6Yp7cW6iPRq98+lc4uoxM6jLCxEZ8/npvWxLuPMh+II0U5L6q3XjCZctzW7by/C5jCP+uS7TUgm0vrRNJQLxQ9Fv8DkGPHss/QBzGMsoWIzcmkd4hIYD0Pe9HlmJG/m1Dmx+FU9xX/iG5AHXLTQq+ZPAAAAAElFTkSuQmCC"/>
+                                    <input type="hidden" name="idcaptcha" id="idcaptcha" value="Q23ce08c82663bab83214211340a64f08" />
                                 </p>
                             </div>
                         </div>
@@ -540,7 +540,7 @@
                     <input type="hidden" id="episode_id" value="151567" />
                     <input type="hidden" id="slug" value="boku-no-hero-academia" />
                     <div class="comment-container">
-                        <span class="story-detail-title"><i class="fas fa-comments"></i>Bình Luận (<span class="comment-count">11937</span>)</span>
+                        <span class="story-detail-title"><i class="fas fa-comments"></i>Bình Luận (<span class="comment-count">11938</span>)</span>
                                                     <div class="group01 comments-container">
                                 <div class="notify" style="padding: 10px; margin-bottom: 10px; background-color: #FFF;">
                                     Like <a rel="nofollow" href="https://www.facebook.com/truyenqq.page" target="_blank">Fanpage</a> để ủng hộ TruyenQQ và cập nhật các thông tin mới nhất về các bộ truyện nhé. <div class="fb-like" data-href="https://www.facebook.com/fantruyenqq" data-send="false" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
@@ -618,6 +618,27 @@
                     <div class="action-comment">
                         <span class="like-comment" data-id="1156326"><i class="fas fa-thumbs-up"></i> <span class="total-like-comment">0</span></span>
                         <span class="reply-comment" data-parent="1156306" data-id="1156326" data-user="0" data-replyname="Mune"><i class="far fa-comment"></i> Trả lời</span>
+                                            </div>
+                </div>
+            </div>
+        </article>
+        <article class="info-comment child_1156348 parent_1156306 reply-list">
+            <div class="outsite-comment reply-list">
+                <figure class="avartar-comment">
+                    <img src="http://static.truyenqq.com/template/frontend/images/noavatar.png" alt="VP">
+                </figure>
+                <div class="item-comment">
+                    <div class="outline-content-comment">
+                        <div>
+                            <strong>VP</strong><span class="title-user-comment title-hidden">Ẩn Danh</span>
+                            <span class="time">1 Phút Trước</span>
+                                                    </div>
+                        <div class="content-comment">
+                            <strong>Mune</strong> Chắc chắn là do Eri nhé. Nhưng khả năng cao là chỉ được 1 khoảng thời gian, sau đó sẽ bị mất do năng lực chưa pro. Như thế sẽ tạo tình tiết gay cấn và tạo cân bằng game. Chứ phục hồi hẳn luôn thì easy game quá :)))).                        </div>
+                    </div>
+                    <div class="action-comment">
+                        <span class="like-comment" data-id="1156348"><i class="fas fa-thumbs-up"></i> <span class="total-like-comment">0</span></span>
+                        <span class="reply-comment" data-parent="1156306" data-id="1156348" data-user="0" data-replyname="VP"><i class="far fa-comment"></i> Trả lời</span>
                                             </div>
                 </div>
             </div>
@@ -744,27 +765,6 @@
                     <div class="action-comment">
                         <span class="like-comment" data-id="1156283"><i class="fas fa-thumbs-up"></i> <span class="total-like-comment">0</span></span>
                         <span class="reply-comment" data-parent="0" data-id="1156283" data-user="224060" data-replyname="hoangphucnguyen"><i class="far fa-comment"></i> Trả lời</span>
-                                            </div>
-                </div>
-            </div>
-        </article>
-        <article class="info-comment child_1156256 parent_0 comment-main-level">
-            <div class="outsite-comment comment-main-level">
-                <figure class="avartar-comment">
-                    <img src="http://static.truyenqq.com/template/frontend/images/noavatar.png" alt="onb">
-                </figure>
-                <div class="item-comment">
-                    <div class="outline-content-comment">
-                        <div>
-                            <strong>onb</strong><span class="title-user-comment title-hidden">Ẩn Danh</span>
-                            <span class="time">5 Giờ Trước</span>
-                                                    </div>
-                        <div class="content-comment">
-                            <strong></strong> Số 1 chính hiệu tái xuất :))                        </div>
-                    </div>
-                    <div class="action-comment">
-                        <span class="like-comment" data-id="1156256"><i class="fas fa-thumbs-up"></i> <span class="total-like-comment">2</span></span>
-                        <span class="reply-comment" data-parent="0" data-id="1156256" data-user="0" data-replyname="onb"><i class="far fa-comment"></i> Trả lời</span>
                                             </div>
                 </div>
             </div>

@@ -18,11 +18,9 @@ public final class Main extends javax.swing.JFrame {
         initComponents();
         addPanel();
         allFiles = (DefaultTableModel)jTable1.getModel();
-        showListFile();
+        showListFile();//Doc tat ca file lich su len
         this.setLocationRelativeTo(null);
     }
-
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -100,17 +98,15 @@ public final class Main extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton4))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -194,14 +190,15 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int row = jTable1.getSelectedRow();
-        String nameFile = (String) jTable1.getValueAt(row, 0);
+        int[] rows = jTable1.getSelectedRows();
+        for (int i = 0; i < rows.length; i++) {
+            String nameFile = (String) jTable1.getValueAt(rows[i], 0);
         
-        NewJPanel formF = new NewJPanel();
-        formF.ganData(nameFile);
-        
-        jTabbedPane1.add("File", formF);
-        
+            NewJPanel formF = new NewJPanel();
+            formF.ganData(nameFile);
+
+            jTabbedPane1.add("File", formF);
+        }
         this.pack();
         // should be last.
         this.setVisible(true);
@@ -230,11 +227,7 @@ public final class Main extends javax.swing.JFrame {
             FileHistory f = new FileHistory(fileEntry.getName());
             allFiles.addRow(f.toObjects());
         }
-    }
-    
-    
-    //Mở file lịch sử
-    
+    }  
     /**
      * @param args the command line arguments
      */
